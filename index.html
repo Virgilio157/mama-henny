@@ -784,10 +784,10 @@ PREGUNTAS:
     setStatus('Toca el botón verde para hablar conmigo 💕');
 
   } catch(e) {
-    const friendly = 'Mamá Henny mi amor, en este momento no pude conectarme. Espera un momentico y vuelve a tocar el botón. 💕';
-    showAI(friendly);
-    speak(friendly);
-    setStatus('¿Hay internet activo? Intenta de nuevo 💕');
+    const errMsg = e?.message || String(e);
+    showAI('ERR: ' + errMsg);
+    setStatus('ERR: ' + errMsg);
+    speak('Error de conexión.');
   }
 }
 
