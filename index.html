@@ -124,7 +124,17 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
 </style>
 </head>
 <body>
-<div id="app">
+<!-- PANTALLA DE CONFIGURACIÓN (solo primera vez) -->
+<div id="setupScreen" style="display:none;position:fixed;inset:0;background:#fff9fb;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;font-family:'Nunito',sans-serif;">
+  <div style="font-size:3rem;margin-bottom:16px;">🌸</div>
+  <h2 style="color:#e91e8c;font-size:1.4rem;font-weight:800;margin-bottom:8px;text-align:center;">Configuración inicial</h2>
+  <p style="color:#757575;font-size:0.95rem;text-align:center;margin-bottom:24px;line-height:1.5;">Pega aquí el Anthropic API Key.<br>Se guardará en este celular y no irá a ningún servidor.</p>
+  <input id="keyInput" type="password" placeholder="sk-ant-api03-..." style="width:100%;max-width:380px;border:2px solid #f48fb1;border-radius:14px;padding:14px 16px;font-size:0.95rem;font-family:'Nunito',sans-serif;margin-bottom:14px;outline:none;">
+  <button onclick="saveKey()" style="width:100%;max-width:380px;background:linear-gradient(135deg,#e91e8c,#c2185b);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;">Guardar y abrir la app 🌸</button>
+  <p style="color:#bbb;font-size:0.8rem;margin-top:20px;text-align:center;">El key nunca se sube a internet — queda solo en este celular.</p>
+</div>
+
+<div id="app" style="display:none;">
 
   <!-- BANNER MEDICAMENTOS - siempre visible -->
   <div id="medBanner" onclick="askQuick('medicamentos')">
@@ -273,11 +283,30 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
 
 <script>
 // ═══════════════════════════════════════════
-// CONFIGURACIÓN — reemplaza las keys si es necesario
+// KEYS — guardadas en el dispositivo, nunca en el código
 // ═══════════════════════════════════════════
-const CLAUDE_KEY      = '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';
 const ELEVENLABS_KEY  = 'sk_a969b2aa2a52e661a0053ec47c48176f417b31422261b51e';
 const VOICE_ID        = 'pFZP5JQG7iQjIQuC4Bku'; // Lina — colombiana
+let CLAUDE_KEY = localStorage.getItem('mh_claude_key') || '';
+
+function setupRequired() { return !CLAUDE_KEY || CLAUDE_KEY.length < 20; }
+
+function saveKey() {
+  const k = document.getElementById('keyInput').value.trim();
+  if (!k || k.length < 20) { alert('El key parece incompleto. Asegúrate de copiarlo completo.'); return; }
+  localStorage.setItem('mh_claude_key', k);
+  CLAUDE_KEY = k;
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  playGreeting();
+}
+
+function resetKey() {
+  if (confirm('¿Borrar el API key guardado?')) {
+    localStorage.removeItem('mh_claude_key');
+    location.reload();
+  }
+}
 
 // ═══════════════════════════════════════════
 // ELEMENTO DE AUDIO GLOBAL (Android-friendly)
@@ -348,6 +377,13 @@ const SALUDOS = {
 // INICIO
 // ═══════════════════════════════════════════
 window.onload = () => {
+  if (setupRequired()) {
+    document.getElementById('setupScreen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    return;
+  }
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
   updateDateTime();
   setInterval(updateDateTime, 60000);
   setInterval(checkMedTime, 60000);
@@ -584,6 +620,10 @@ function setSpeaker(name, btn) {
 }
 
 function playGreeting() {
+  updateDateTime();
+  setInterval(updateDateTime, 60000);
+  setInterval(checkMedTime, 60000);
+  checkMedTime();
   const h   = new Date().getHours();
   const pool = h >= 6 && h < 12 ? SALUDOS.manana : h < 19 ? SALUDOS.tarde : SALUDOS.noche;
   const g   = pool[Math.floor(Math.random() * pool.length)];
@@ -784,10 +824,10 @@ PREGUNTAS:
     setStatus('Toca el botón verde para hablar conmigo 💕');
 
   } catch(e) {
-    const errMsg = e?.message || String(e);
-    showAI('ERR: ' + errMsg);
-    setStatus('ERR: ' + errMsg);
-    speak('Error de conexión.');
+    const friendly = 'Mamá Henny mi amor, en este momento no pude conectarme. Espera un momentico y vuelve a tocar el botón. 💕';
+    showAI(friendly);
+    speak(friendly);
+    setStatus('¿Hay internet activo? Intenta de nuevo 💕');
   }
 }
 
