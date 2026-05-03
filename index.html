@@ -759,7 +759,13 @@ function askQuick(type) {
 }
 
 function askQuickFromMemory(type) { closeMemories(); askQuick(type); }
-function askMemory(prompt) { closeMemories(); showUser(prompt); sendToAI(prompt, false, true); }
+function askMemory(prompt) {
+  closeMemories();
+  // Convertir el tema en instrucción clara para Claude (no primera persona de MH)
+  const instruccion = 'TEMA DE HOY: ' + prompt + '\n\nHazle a Mamá Henny preguntas cálidas y abiertas sobre ese tema para que ELLA recuerde y narre. Tú eres el asistente, no ella.';
+  showUser('🌹 Recordando...');
+  sendToAI(instruccion, false, true);
+}
 
 // ═══════════════════════════════════════════
 // LLAMADA A CLAUDE
@@ -777,13 +783,19 @@ async function sendToAI(userText, _unused = false, isMemory = false, isVersiculo
   if (isMemory) {
     system += `
 
-MODO ESTIMULACIÓN COGNITIVA:
-Tu objetivo es INVITARLA A RECORDAR Y NARRAR con sus propias palabras. Nunca le cuentes la historia tú.
-Después de 2 oraciones cálidas, agrega exactamente:
+MODO ESTIMULACIÓN COGNITIVA — REGLAS ABSOLUTAS:
+
+1. TÚ ERES EL ASISTENTE. NUNCA eres Mamá Henny. NUNCA hables en primera persona como si fueras ella.
+2. Siempre hablas en SEGUNDA PERSONA, dirigiéndote A ella: "¿Tú recuerdas...?", "¿Cómo te sentiste...?", "Cuéntame tú..."
+3. NUNCA respondas la pregunta por ella. NUNCA narres su historia. NUNCA digas "Ay, esos recuerdos..." como si fueras ella.
+4. Tu único trabajo: 1 oración cálida de introducción + 2 preguntas abiertas cortas dirigidas A ella.
+5. Las preguntas deben ser simples, en español colombiano, fáciles de entender para una señora mayor.
+
+FORMATO DE RESPUESTA (exactamente así):
+[1 oración cálida dirigida A Mamá Henny]
 PREGUNTAS:
-1. [pregunta en segunda persona que la invite a narrar]
-2. [pregunta específica con nombres reales: Lilia, Miguel, Cecilia, Max, Brasil, Colegio Lourdes]
-3. [pregunta sobre emociones o detalles sensoriales del recuerdo]`;
+1. [pregunta abierta corta, en segunda persona, dirigida A ella]
+2. [pregunta específica con un nombre real: Lilia, Miguel, Cecilia, Max, Brasil, Barranquilla]`;
   }
 
   try {
