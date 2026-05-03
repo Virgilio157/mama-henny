@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mamá Henny">
+<meta name="theme-color" content="#e91e8c">
 <title>Hola Mamá Henny 🌸</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -10,22 +15,33 @@
 :root {
   --pink: #e91e8c; --pink-light: #f48fb1; --pink-soft: #fce4ec;
   --green: #2e7d32; --green-light: #4caf50;
-  --gray: #757575; --bg: #fff9fb; 
+  --gray: #757575; --bg: #fff9fb;
 }
 body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 #app { width: 100%; max-width: 430px; padding: 0 0 60px; }
- 
+
+/* BANNER MEDICAMENTOS */
+#medBanner {
+  position: sticky; top: 0; z-index: 50;
+  background: linear-gradient(135deg, #ff8f00, #e65100);
+  color: white; padding: 13px 20px; text-align: center;
+  font-weight: 800; font-size: 0.9rem; cursor: pointer;
+  animation: pulse-orange 2s ease-in-out infinite; letter-spacing: 0.2px;
+  border-radius: 0 0 10px 10px; box-shadow: 0 3px 12px rgba(230,81,0,0.4);
+}
+@keyframes pulse-orange { 0%,100% { opacity: 1; } 50% { opacity: 0.75; } }
+
 .header { background: linear-gradient(135deg, var(--pink) 0%, #c2185b 100%); padding: 28px 24px 20px; text-align: center; color: white; border-radius: 0 0 32px 32px; box-shadow: 0 4px 20px rgba(233,30,140,0.25); }
 .header h1 { font-size: 1.8rem; font-weight: 800; }
 .header .subtitle { font-size: 0.95rem; opacity: 0.9; margin-top: 4px; }
 .header .datetime { margin-top: 10px; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 16px; font-size: 0.9rem; display: inline-block; }
- 
+
 .who-section { padding: 20px 24px 8px; }
 .who-section label { font-size: 0.8rem; color: var(--gray); font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 10px; text-transform: uppercase; }
 .who-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
 .who-btn { border: 2px solid var(--pink-light); background: white; border-radius: 24px; padding: 8px 18px; font-size: 0.95rem; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--pink); cursor: pointer; }
 .who-btn.active { background: var(--pink); color: white; border-color: var(--pink); }
- 
+
 .voice-section { padding: 24px; display: flex; flex-direction: column; align-items: center; }
 #voiceBtn {
   width: 180px; height: 180px; border-radius: 50%;
@@ -33,8 +49,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
   border: none; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   box-shadow: 0 8px 30px rgba(46,125,50,0.35);
-  transition: all 0.2s; color: white;
-  user-select: none;
+  transition: all 0.2s; color: white; user-select: none;
 }
 #voiceBtn:active { transform: scale(0.95); }
 #voiceBtn.listening { background: linear-gradient(135deg, #ef5350, #c62828); animation: pulse-red 1.2s infinite; }
@@ -43,13 +58,13 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
 @keyframes pulse-purple { 0%,100% { box-shadow: 0 8px 30px rgba(74,20,140,0.4); } 50% { box-shadow: 0 8px 55px rgba(74,20,140,0.75); } }
 #voiceBtn .mic-icon { font-size: 3rem; line-height: 1; }
 #voiceBtn .btn-label { font-size: 1rem; font-weight: 700; margin-top: 8px; font-family: 'Nunito', sans-serif; text-align: center; padding: 0 10px; }
- 
+
 #statusMsg { margin-top: 14px; font-size: 0.95rem; color: var(--gray); font-weight: 600; text-align: center; min-height: 24px; padding: 0 24px; }
- 
+
 .chat-bubble { margin: 0 24px 14px; background: var(--pink); color: white; border-radius: 20px 20px 20px 4px; padding: 16px 20px; font-size: 1.05rem; line-height: 1.65; font-weight: 600; display: none; box-shadow: 0 4px 16px rgba(233,30,140,0.2); }
 .chat-bubble.visible { display: block; }
 .chat-bubble.user-bubble { background: #f3e5f5; color: #4a148c; border-radius: 20px 20px 4px 20px; }
- 
+
 #sharePanel { display: none; margin: 0 24px 16px; flex-direction: column; gap: 10px; }
 #sharePanel.visible { display: flex; }
 #sharePanel .share-label { font-size: 0.85rem; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -57,26 +72,26 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
 .share-btn { flex: 1; border: none; border-radius: 14px; padding: 13px 8px; font-size: 0.95rem; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .share-wa { background: #25D366; color: white; }
 .share-fb { background: #1877F2; color: white; }
- 
+
 #speakingIndicator { display: none; align-items: center; gap: 4px; margin: 0 24px 10px; }
 #speakingIndicator.visible { display: flex; }
 .speak-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); animation: bounce 0.8s infinite; }
 .speak-dot:nth-child(2) { animation-delay: 0.15s; }
 .speak-dot:nth-child(3) { animation-delay: 0.3s; }
 @keyframes bounce { 0%,100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-6px); opacity: 1; } }
- 
+
 #followUpPanel { display: none; margin: 0 24px 16px; flex-direction: column; gap: 8px; }
 .followup-title { font-size: 0.8rem; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
 .followup-btn { background: white; border: 2px solid var(--pink-light); border-radius: 14px; padding: 12px 14px; font-size: 0.92rem; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--pink); cursor: pointer; text-align: left; }
 .followup-btn:active { background: var(--pink-soft); }
- 
+
 #stopSpeakBtn { display: none; margin: 0 24px 10px; width: calc(100% - 48px); background: #fff3e0; border: 2px solid #ffb74d; border-radius: 14px; padding: 11px; font-size: 0.92rem; font-family: 'Nunito', sans-serif; font-weight: 700; color: #e65100; cursor: pointer; }
 #stopSpeakBtn.visible { display: block; }
 #repeatBtn { display: none; margin: 0 24px 14px; width: calc(100% - 48px); background: var(--pink-soft); border: 2px solid var(--pink-light); border-radius: 14px; padding: 11px; font-size: 0.92rem; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--pink); cursor: pointer; }
 #repeatBtn.visible { display: block; }
- 
+
 .divider { height: 1px; background: #f8bbd0; margin: 16px 24px; }
- 
+
 .quick-section { padding: 0 24px; }
 .section-title { font-size: 0.8rem; color: var(--gray); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; }
 .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
@@ -84,13 +99,13 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
 .quick-btn:active { background: var(--pink-soft); }
 .quick-btn .emoji { font-size: 1.5rem; }
 .memories-btn { width: 100%; background: linear-gradient(135deg, #ff6f00, #e65100); color: white; border: none; border-radius: 16px; padding: 16px; font-size: 1rem; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
- 
+
 .call-section { padding: 0 24px 16px; }
 .call-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .call-btn { background: white; border: 2px solid #c8e6c9; border-radius: 16px; padding: 14px 10px; font-size: 0.85rem; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--green); cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; }
 .call-btn:active { background: #e8f5e9; }
 .call-btn .emoji { font-size: 1.4rem; }
- 
+
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; justify-content: center; }
 .modal-overlay.open { display: flex; }
 .modal { background: white; border-radius: 28px 28px 0 0; padding: 28px 24px 40px; width: 100%; max-width: 430px; max-height: 88vh; overflow-y: auto; }
@@ -103,17 +118,25 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
 .memory-category h3 { font-size: 0.95rem; font-weight: 800; color: #333; margin-bottom: 8px; border-bottom: 2px solid var(--pink-soft); padding-bottom: 4px; }
 .memory-question { background: var(--pink-soft); border-radius: 12px; padding: 11px 14px; margin-bottom: 7px; font-size: 0.92rem; color: #333; cursor: pointer; font-weight: 600; border: none; width: 100%; text-align: left; font-family: 'Nunito', sans-serif; }
 .memory-question:active { background: #f8bbd0; }
+
+/* Indicador de voz ElevenLabs activa */
+#voiceSource { font-size: 0.7rem; color: var(--gray); text-align: center; margin-top: 6px; min-height: 16px; opacity: 0.7; }
 </style>
 </head>
 <body>
 <div id="app">
- 
+
+  <!-- BANNER MEDICAMENTOS - siempre visible -->
+  <div id="medBanner" onclick="askQuick('medicamentos')">
+    💊 ¿Ya tomaste tus medicamentos hoy? — Toca aquí 💊
+  </div>
+
   <div class="header">
     <h1>Hola, Mamá Henny 🌸</h1>
     <div class="subtitle">Tu asistente de acompañamiento</div>
     <div class="datetime" id="datetime">cargando...</div>
   </div>
- 
+
   <div class="who-section">
     <label>¿Quién le habla hoy?</label>
     <div class="who-buttons">
@@ -123,29 +146,30 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <button class="who-btn" onclick="setSpeaker('Guillermo',this)">👨 Guillermo</button>
     </div>
   </div>
- 
+
   <div class="voice-section">
     <button id="voiceBtn" onclick="handleVoiceTap()">
       <span class="mic-icon" id="micIcon">🎙️</span>
       <span class="btn-label" id="btnLabel">Toca para hablar</span>
     </button>
     <div id="statusMsg">Toca el botón verde para hablar conmigo 💕</div>
+    <div id="voiceSource"></div>
   </div>
- 
+
   <div class="chat-bubble user-bubble" id="userBubble"></div>
- 
+
   <div id="speakingIndicator">
     <div class="speak-dot"></div>
     <div class="speak-dot"></div>
     <div class="speak-dot"></div>
     <span style="margin-left:8px;font-size:0.85rem;color:var(--gray);font-weight:600;">Respondiendo...</span>
   </div>
- 
+
   <div class="chat-bubble" id="aiBubble"></div>
- 
+
   <button id="stopSpeakBtn" onclick="stopSpeaking()">⏹️ Parar la voz</button>
   <button id="repeatBtn" onclick="repeatLast()">🔁 Repetir lo que dijo</button>
- 
+
   <div id="sharePanel">
     <div class="share-label">💌 ¿Quieres compartir este versículo?</div>
     <div class="share-row">
@@ -153,11 +177,11 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <button class="share-btn share-fb" onclick="shareFB()">📘 Facebook</button>
     </div>
   </div>
- 
+
   <div id="followUpPanel"></div>
- 
+
   <div class="divider"></div>
- 
+
   <div class="quick-section">
     <div class="section-title">Botones rápidos</div>
     <div class="quick-grid">
@@ -165,14 +189,17 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <button class="quick-btn" onclick="askQuick('hora')"><span class="emoji">🕐</span>¿Qué hora es?</button>
       <button class="quick-btn" onclick="askQuick('chiste')"><span class="emoji">😄</span>Un chiste</button>
       <button class="quick-btn" onclick="askQuick('versiculo')"><span class="emoji">📖</span>Versículo</button>
-      <button class="quick-btn" onclick="askQuick('medicamentos')"><span class="emoji">💊</span>Medicamentos</button>
       <button class="quick-btn" onclick="askQuick('oracion')"><span class="emoji">🙏</span>Una oración</button>
+      <button class="quick-btn" onclick="askQuick('animo')"><span class="emoji">🌟</span>¡Anímate!</button>
     </div>
+    <button class="quick-btn" style="width:100%;margin-bottom:10px;background:white;border:2px solid #f8bbd0;border-radius:16px;padding:14px 10px;" onclick="askQuick('medicamentos')">
+      <span class="emoji">💊</span> Mis Medicamentos
+    </button>
     <button class="memories-btn" onclick="openMemories()">🌹 Mis Recuerdos</button>
   </div>
- 
+
   <div class="divider"></div>
- 
+
   <div class="call-section">
     <div class="section-title" style="margin-bottom:10px;">📞 Llamar a...</div>
     <div class="call-grid">
@@ -185,9 +212,9 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       </a>
     </div>
   </div>
- 
+
 </div>
- 
+
 <!-- MODAL RECUERDOS -->
 <div class="modal-overlay" id="memoriesModal">
   <div class="modal">
@@ -198,7 +225,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <span id="memMicIcon">🎙️</span>
       <span id="memBtnLabel">Hablar sobre mis recuerdos</span>
     </button>
- 
+
     <div class="memory-category">
       <h3>👨‍👩‍👧‍👦 Mi familia</h3>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo se llaman tus cuatro hijos y dónde está cada uno hoy. Me encantaría escucharte hablar de ellos.')">¿Cómo se llaman tus hijos?</button>
@@ -207,34 +234,34 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <button class="memory-question" onclick="askMemory('Mamá Henny, ¿cuántos nietos tienes? Cuéntame de ellos con ese orgullo tan bonito que les tienes.')">¿Cuántos nietos tienes?</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de tu hermano Virgilio que vive hace tantos años en Estados Unidos. ¿Cómo era él de joven? ¿Qué recuerdas de cuando estaban juntos?')">Tu hermano Virgilio</button>
     </div>
- 
+
     <div class="memory-category">
       <h3>🌎 Mis viajes y lugares</h3>
       <button class="memory-question" onclick="askMemory('Mamá Henny, háblame de cuando vivieron en Brasil en los años 70. ¿Cómo fue esa aventura de llevarse a toda la familia con la abuela Lilia? ¿Qué fue lo que más te sorprendió de ese país?')">Cuando viviste en Brasil</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame sobre Cartagena donde naciste y Barranquilla donde viviste casi toda tu vida. ¿Cuáles son los lugares que más llevas en el corazón?')">Cartagena y Barranquilla</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo eran tus papás Lilia y Virgilio Navarro, esa gente tan linda de El Carmen de Ocaña. ¿Cómo los recuerdas?')">Tus papás y sus raíces</button>
     </div>
- 
+
     <div class="memory-category">
       <h3>📚 Tu juventud</h3>
-      <button class="memory-question" onclick="askMemory('Mamá Henny, háblame del Colegio Lourdes de las monjas de La Presentación en Barranquilla donde estudiaste y te graduaste de bachiller. ¿Cómo eran esos años? ¿Tenías amigas especiales? ¿Fuiste feliz en esa época tan bonita?')">Tu colegio Lourdes</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, háblame del Colegio Lourdes de las monjas de La Presentación en Barranquilla donde estudiaste y te graduaste de bachiller. ¿Cómo eran esos años? ¿Tenías amigas especiales?')">Tu colegio Lourdes</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo fue que te casaste con Miguel Salgado en 1965. ¿Cómo fue la boda? ¿Qué recuerdas de ese día tan especial?')">Tu matrimonio en 1965</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo era la vida cuando tu esposo era Oficial Naval y vivían entre Barranquilla y Cartagena. ¿Cómo manejabas esa vida con los niños?')">Cuando tu esposo era Naval</button>
     </div>
- 
+
     <div class="memory-category">
       <h3>💝 Tu fortaleza</h3>
       <button class="memory-question" onclick="askMemory('Mamá Henny, tú has vivido momentos muy duros en tu vida y siempre saliste adelante con tanta dignidad y amor. ¿Qué crees que te dio esa fortaleza tan grande?')">¿De dónde sacaste tanta fuerza?</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, la pérdida de tu papá Virgilio en 1966 fue muy dolorosa para toda la familia. ¿Cómo lograste seguir adelante con tanta fortaleza y tanto amor por tus hijos?')">Tu fortaleza ante el dolor</button>
     </div>
- 
+
     <div class="memory-category">
       <h3>🏠 Tu vida hoy</h3>
-      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo es tu vida hoy en tu apartamento con Max tu perrito yorkshire. ¿Qué cosas hace Max que te hacen reír? ¿Cómo se llevan los dos?')">Tu apartamento y Max</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo es tu vida hoy en tu apartamento con Max tu perrito yorkshire. ¿Qué cosas hace Max que te hacen reír?')">Tu apartamento y Max</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame sobre tu amiga Cecilia y esas tardes tan lindas que pasas en su casa con Max. ¿Qué es lo que más disfrutas de estar con ella?')">Tu amiga Cecilia</button>
-      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de las amigas del colegio con las que te reúnes cada varios años. ¿Cómo son esos encuentros? ¿Qué recuerdan juntas?')">Tus amigas del colegio</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de las amigas del colegio con las que te reúnes cada varios años. ¿Cómo son esos encuentros?')">Tus amigas del colegio</button>
     </div>
- 
+
     <div class="memory-category">
       <h3>🙏 Fe y alegría</h3>
       <button class="memory-question" onclick="askQuickFromMemory('versiculo')">Un versículo especial para mí</button>
@@ -243,33 +270,64 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
     </div>
   </div>
 </div>
- 
+
 <script>
-// ═══════════════════════════════════════════════
-// ⚠️ VIRGILIO: REEMPLAZA ESTA LÍNEA CON TU API KEY
-// ═══════════════════════════════════════════════
-const API_KEY = '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';
- 
+// ═══════════════════════════════════════════
+// CONFIGURACIÓN — reemplaza las keys si es necesario
+// ═══════════════════════════════════════════
+const CLAUDE_KEY      = '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';
+const ELEVENLABS_KEY  = 'sk_a969b2aa2a52e661a0053ec47c48176f417b31422261b51e';
+const VOICE_ID        = 'pFZP5JQG7iQjIQuC4Bku'; // Lina — colombiana
+
+// ═══════════════════════════════════════════
+// ELEMENTO DE AUDIO GLOBAL (Android-friendly)
+// ═══════════════════════════════════════════
+const audioEl = document.createElement('audio');
+audioEl.setAttribute('playsinline', '');
+document.body.appendChild(audioEl);
+
+// ═══════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════
+let currentSpeaker = 'Virgilio';
+let lastVersiculo  = '';
+let lastAIText     = '';
+let listening      = false;
+let memListening   = false;
+let isSpeaking     = false;
+let recognition    = null;
+let memRecognition = null;
+let selectedVoice  = null;
+let watchdogTimer  = null;
+const ttsSupported = 'speechSynthesis' in window;
+const srSupported  = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+// ═══════════════════════════════════════════
+// SISTEMA DE CONTEXTO (BIO DE MAMÁ HENNY)
+// ═══════════════════════════════════════════
 const MAMA_BIO = `Eres el asistente personal y de acompañamiento de Mamá Henny (Henny Navarro de Salgado).
 Habla siempre en español colombiano, con voz cálida, amorosa, respetuosa y muy cercana.
- 
+
 DATOS DE MAMÁ HENNY:
-- Nombre completo: Henny Navarro de Salgado. Nació el 7 de agosto de 1945 en Cartagena. Vivió casi toda su vida en Barranquilla.
-- Papás: Madre Lilia Portillo, padre Virgilio Navarro, de El Carmen de Ocaña. El papá murió en accidente de tren en marzo de 1966. La abuela Lilia fue pilar de la familia y vivió con ellos.
-- Hermano: Virgilio Navarro, vive en Estados Unidos hace muchos años.
-- Educación: Bachiller del Colegio Lourdes, monjas de La Presentación, Barranquilla.
-- Esposo: Miguel Salgado Haddad, Oficial Naval. Casados en 1965. Vivieron entre Barranquilla y Cartagena. En 1971-72 toda la familia vivió en Brasil más de un año con la abuela Lilia. En 1973 nació Guillermo. Se separaron — fue muy doloroso.
-- 4 hijos: Miguel (EE.UU.), Carlos Alberto (Colombia), Guillermo Eduardo (Colombia), Virgilio (cirujano plástico, Barranquilla).
-- Amiga Cecilia: Henny va en las tardes a su casa con Max.
-- Hoy: vive sola en apartamento en Barranquilla con su yorkshire Max. Es cristiana, su fe es muy importante. Tiene trastorno cognitivo — olvida cosas. Le encanta conversar y sentirse acompañada y querida.
- 
+- Nombre: Henny Navarro de Salgado. Nació 7 agosto 1945 en Cartagena. Vive en Barranquilla.
+- Papás: Lilia Portillo (mamá) y Virgilio Navarro (papá, de El Carmen de Ocaña). Papá murió en accidente de tren en 1966. La abuela Lilia fue pilar de la familia.
+- Hermano: Virgilio Navarro, vive en EE.UU.
+- Estudió en Colegio Lourdes (monjas La Presentación), Barranquilla.
+- Esposo: Miguel Salgado Haddad, Oficial Naval. Casados en 1965. En 1971-72 toda la familia vivió en Brasil. En 1973 nació Guillermo. Luego se separaron.
+- 4 hijos: Miguel (EE.UU.), Carlos Alberto, Guillermo Eduardo, Virgilio (cirujano plástico, Barranquilla).
+- Mascota: Max, su perrito yorkshire, lo quiere muchísimo.
+- Amiga Cecilia: va en las tardes a su casa con Max.
+- Desayuno: Elida (señora del edificio) le prepara desayuno cada mañana.
+- Porteros: Ramiro y Dago (semana), Humberto (domingos).
+- Vive sola en edificio Elisa, Barranquilla. Es cristiana. Tiene deterioro cognitivo — olvida cosas recientes.
+
 REGLAS ABSOLUTAS:
 - Llámala siempre "Mamá Henny" o "mi amor"
 - Respuestas CORTAS: máximo 3-4 oraciones simples y claras
 - Nunca la contradigas — acompáñala siempre con amor
-- Si algo falla o no sabe, responde con cariño y redirige suavemente
+- Si algo falla, responde con cariño y redirige suavemente
 - Hoy le habla: `;
- 
+
 const SALUDOS = {
   manana: [
     'Buenos días Mamá Henny, ¿cómo amaneciste hoy? ¿Pudiste descansar bien? ¿Max te dejó dormir?',
@@ -285,52 +343,212 @@ const SALUDOS = {
     'Buenas noches mi amor, qué bueno acompañarte esta noche. ¿Cómo te fue hoy? ¿Está Max ya dormido?'
   ]
 };
- 
-let currentSpeaker = 'Virgilio';
-let lastVersiculo = '';
-let lastAIText = '';
-let listening = false;
-let memListening = false;
-let isSpeaking = false;
-let recognition = null;
-let memRecognition = null;
-let selectedVoice = null;
-let ttsSupported = false;
-let srSupported = false;
-let watchdogInterval = null;
- 
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
 // INICIO
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 window.onload = () => {
   updateDateTime();
   setInterval(updateDateTime, 60000);
- 
-  ttsSupported = 'speechSynthesis' in window;
-  srSupported = ('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window);
- 
+  setInterval(checkMedTime, 60000);
+  checkMedTime();
+
   if (!srSupported) {
     document.getElementById('btnLabel').textContent = 'Solo botones';
     setStatus('Usa los botones de abajo para hablar conmigo 💕');
   }
- 
+
   if (ttsSupported) {
-    const tryLoadVoices = () => {
+    const tryLoad = () => {
       const v = window.speechSynthesis.getVoices();
       if (v.length) selectBestVoice(v);
     };
-    tryLoadVoices();
-    window.speechSynthesis.onvoiceschanged = tryLoadVoices;
-    setTimeout(tryLoadVoices, 1000);
-    setTimeout(tryLoadVoices, 2500);
+    tryLoad();
+    window.speechSynthesis.onvoiceschanged = tryLoad;
+    setTimeout(tryLoad, 1000);
+    setTimeout(tryLoad, 2500);
   }
- 
+
   setTimeout(playGreeting, 900);
 };
- 
-// ═══════════════════════════════════════════════
-// VOZ — selección para Android
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// RECORDATORIO DE MEDICAMENTOS AUTOMÁTICO
+// ═══════════════════════════════════════════
+function checkMedTime() {
+  const h   = new Date().getHours();
+  const hoy = new Date().toDateString();
+
+  let slot = null;
+  if (h >= 7  && h <= 9)  slot = 'manana';
+  if (h >= 11 && h <= 13) slot = 'mediodia';
+  if (h >= 14 && h <= 16) slot = 'tarde';
+  if (!slot) return;
+
+  const key = 'med_' + hoy + '_' + slot;
+  if (sessionStorage.getItem(key)) return;
+
+  const msgs = {
+    manana:   'Buenos días Mamá Henny mi amor. No olvides tomarte los medicamentos del pastillero que Virgilio preparó con tanto cuidado. Un vasito de agua y listo. 💊💕',
+    mediodia: 'Mamá Henny, ¿ya revisaste el pastillero de hoy? Es muy importante tomarse los medicamentos del mediodía. ¿Está vacío ese compartimento? 💊',
+    tarde:    'Mamá Henny mi amor, un recordatorio dulce: ¿ya tomaste todos tus medicamentos de hoy? Virgilio preparó ese pastillero pensando en ti. 💊💕'
+  };
+
+  sessionStorage.setItem(key, '1');
+  showAI(msgs[slot]);
+  speak(msgs[slot]);
+}
+
+// ═══════════════════════════════════════════
+// TTS — ElevenLabs (primario) + Web Speech (respaldo)
+// ═══════════════════════════════════════════
+async function speak(text, onDone) {
+  if (!text) { if (onDone) onDone(); return; }
+  stopAllAudio();
+  isSpeaking = true;
+  setBtnSpeaking(true);
+  showSpeakingUI(true);
+
+  let usedEL = false;
+  try {
+    await speakElevenLabs(text);
+    usedEL = true;
+  } catch(e) {
+    setVoiceSource('');
+    if (ttsSupported) await speakWebSpeech(text);
+  }
+
+  if (isSpeaking) {
+    setVoiceSource(usedEL ? '🎙️ Voz Lina — ElevenLabs' : '');
+    endSpeaking();
+    if (onDone) onDone();
+  }
+}
+
+async function speakElevenLabs(text) {
+  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': ELEVENLABS_KEY,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text: text.slice(0, 2500),
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.55, similarity_boost: 0.80, style: 0.20, use_speaker_boost: true }
+    })
+  });
+
+  if (!res.ok) throw new Error('EL:' + res.status);
+
+  const blob = await res.blob();
+  if (!blob || blob.size < 100) throw new Error('EL:vacío');
+
+  const url = URL.createObjectURL(blob);
+
+  return new Promise((resolve, reject) => {
+    audioEl.src = url;
+    audioEl.onended = () => { URL.revokeObjectURL(url); resolve(); };
+    audioEl.onerror = () => { URL.revokeObjectURL(url); reject(new Error('audio:error')); };
+    const p = audioEl.play();
+    if (p && p.catch) p.catch(e => { URL.revokeObjectURL(url); reject(e); });
+  });
+}
+
+function speakWebSpeech(text) {
+  return new Promise(resolve => {
+    if (!ttsSupported) { resolve(); return; }
+    window.speechSynthesis.cancel();
+    const chunks = splitChunks(text, 140);
+    let i = 0;
+
+    function next() {
+      if (!isSpeaking || i >= chunks.length) { resolve(); return; }
+      const u = new SpeechSynthesisUtterance(chunks[i]);
+      u.lang   = selectedVoice ? selectedVoice.lang : 'es-US';
+      u.rate   = 0.80; u.pitch = 1.0; u.volume = 1.0;
+      if (selectedVoice) u.voice = selectedVoice;
+      u.onend  = () => { i++; next(); };
+      u.onerror = () => { i++; next(); };
+      window.speechSynthesis.speak(u);
+    }
+    next();
+
+    // Watchdog Android — el sintetizador se pausa solo
+    clearInterval(watchdogTimer);
+    watchdogTimer = setInterval(() => {
+      if (!isSpeaking) { clearInterval(watchdogTimer); return; }
+      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+    }, 2000);
+  });
+}
+
+function stopAllAudio() {
+  isSpeaking = false;
+  clearInterval(watchdogTimer);
+  audioEl.pause();
+  audioEl.src = '';
+  if (ttsSupported) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+}
+
+function stopSpeaking() {
+  stopAllAudio();
+  endSpeaking();
+}
+
+function endSpeaking() {
+  setBtnSpeaking(false);
+  showSpeakingUI(false);
+  showRepeat();
+}
+
+function showRepeat() {
+  if (lastAIText) document.getElementById('repeatBtn').classList.add('visible');
+}
+
+function repeatLast() {
+  document.getElementById('repeatBtn').classList.remove('visible');
+  if (lastAIText) speak(lastAIText);
+}
+
+function showSpeakingUI(on) {
+  document.getElementById('speakingIndicator').classList.toggle('visible', on);
+  document.getElementById('stopSpeakBtn').classList.toggle('visible', on);
+  if (!on) document.getElementById('stopSpeakBtn').classList.remove('visible');
+}
+
+function setVoiceSource(txt) {
+  document.getElementById('voiceSource').textContent = txt;
+}
+
+function setBtnSpeaking(on) {
+  const btn = document.getElementById('voiceBtn');
+  if (on) {
+    btn.classList.remove('listening'); btn.classList.add('speaking');
+    document.getElementById('micIcon').textContent = '🔊';
+    document.getElementById('btnLabel').textContent = 'Toca para parar';
+  } else {
+    btn.classList.remove('speaking');
+    document.getElementById('micIcon').textContent = '🎙️';
+    document.getElementById('btnLabel').textContent = srSupported ? 'Toca para hablar' : 'Solo botones';
+  }
+}
+
+function splitChunks(text, max) {
+  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+  const chunks = []; let cur = '';
+  for (const s of sentences) {
+    if ((cur + s).length > max) { if (cur) chunks.push(cur.trim()); cur = s; }
+    else cur += s;
+  }
+  if (cur.trim()) chunks.push(cur.trim());
+  return chunks.length ? chunks : [text];
+}
+
+// ═══════════════════════════════════════════
+// SELECCIÓN DE VOZ (FALLBACK)
+// ═══════════════════════════════════════════
 function selectBestVoice(voices) {
   if (!voices || !voices.length) return;
   const tests = [
@@ -341,154 +559,51 @@ function selectBestVoice(voices) {
     v => v.lang.startsWith('es') && /google/i.test(v.name),
     v => v.lang.startsWith('es'),
   ];
-  for (const test of tests) {
-    const found = voices.find(test);
-    if (found) { selectedVoice = found; return; }
+  for (const t of tests) {
+    const f = voices.find(t);
+    if (f) { selectedVoice = f; return; }
   }
   selectedVoice = voices[0];
 }
- 
-// ═══════════════════════════════════════════════
-// TTS robusto para Android
-// ═══════════════════════════════════════════════
-function speak(text, onDone) {
-  if (!ttsSupported || !text) {
-    showRepeat();
-    if (onDone) onDone();
-    return;
-  }
-  window.speechSynthesis.cancel();
-  clearInterval(watchdogInterval);
-  setTimeout(() => _doSpeak(text, onDone), 200);
-}
- 
-function _doSpeak(text, onDone) {
-  const chunks = splitChunks(text, 140);
-  let i = 0;
-  isSpeaking = true;
-  setBtnSpeaking(true);
-  document.getElementById('speakingIndicator').classList.add('visible');
-  document.getElementById('stopSpeakBtn').classList.add('visible');
-  document.getElementById('repeatBtn').classList.remove('visible');
- 
-  function speakChunk() {
-    if (!isSpeaking || i >= chunks.length) {
-      endSpeaking();
-      if (onDone) onDone();
-      return;
-    }
-    const utt = new SpeechSynthesisUtterance(chunks[i]);
-    utt.lang = selectedVoice ? selectedVoice.lang : 'es-US';
-    utt.rate = 0.80;
-    utt.pitch = 1.0;
-    utt.volume = 1.0;
-    if (selectedVoice) utt.voice = selectedVoice;
-    utt.onend = () => { i++; speakChunk(); };
-    utt.onerror = () => { i++; speakChunk(); };
-    window.speechSynthesis.speak(utt);
-  }
- 
-  speakChunk();
- 
-  // Watchdog: Android pausa el sintetizador solo
-  clearInterval(watchdogInterval);
-  watchdogInterval = setInterval(() => {
-    if (!isSpeaking) { clearInterval(watchdogInterval); return; }
-    if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-  }, 2000);
-}
- 
-function endSpeaking() {
-  isSpeaking = false;
-  clearInterval(watchdogInterval);
-  setBtnSpeaking(false);
-  document.getElementById('speakingIndicator').classList.remove('visible');
-  document.getElementById('stopSpeakBtn').classList.remove('visible');
-  showRepeat();
-}
- 
-function stopSpeaking() {
-  isSpeaking = false;
-  clearInterval(watchdogInterval);
-  if (ttsSupported) window.speechSynthesis.cancel();
-  endSpeaking();
-}
- 
-function showRepeat() {
-  if (lastAIText) document.getElementById('repeatBtn').classList.add('visible');
-}
- 
-function repeatLast() {
-  document.getElementById('repeatBtn').classList.remove('visible');
-  if (lastAIText) speak(lastAIText);
-}
- 
-function setBtnSpeaking(on) {
-  const btn = document.getElementById('voiceBtn');
-  if (on) {
-    btn.classList.remove('listening');
-    btn.classList.add('speaking');
-    document.getElementById('micIcon').textContent = '🔊';
-    document.getElementById('btnLabel').textContent = 'Toca para parar';
-  } else {
-    btn.classList.remove('speaking');
-    document.getElementById('micIcon').textContent = '🎙️';
-    document.getElementById('btnLabel').textContent = srSupported ? 'Toca para hablar' : 'Solo botones';
-  }
-}
- 
-function splitChunks(text, max) {
-  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
-  const chunks = [];
-  let cur = '';
-  for (const s of sentences) {
-    if ((cur + s).length > max) { if (cur) chunks.push(cur.trim()); cur = s; }
-    else cur += s;
-  }
-  if (cur.trim()) chunks.push(cur.trim());
-  return chunks.length ? chunks : [text];
-}
- 
-// ═══════════════════════════════════════════════
-// DATETIME
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// FECHA Y HORA
+// ═══════════════════════════════════════════
 function updateDateTime() {
-  const now = new Date();
+  const now  = new Date();
   const dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
   const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   document.getElementById('datetime').textContent =
     `${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMonth()]} · ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
 }
- 
+
 function setSpeaker(name, btn) {
   currentSpeaker = name;
   document.querySelectorAll('.who-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
- 
+
 function playGreeting() {
-  const h = new Date().getHours();
-  let pool = h >= 6 && h < 12 ? SALUDOS.manana : h < 19 ? SALUDOS.tarde : SALUDOS.noche;
-  const g = pool[Math.floor(Math.random() * pool.length)];
+  const h   = new Date().getHours();
+  const pool = h >= 6 && h < 12 ? SALUDOS.manana : h < 19 ? SALUDOS.tarde : SALUDOS.noche;
+  const g   = pool[Math.floor(Math.random() * pool.length)];
   showAI(g);
   speak(g);
 }
- 
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
 // BOTÓN PRINCIPAL — lógica unificada
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function handleVoiceTap() {
   if (isSpeaking) { stopSpeaking(); return; }
-  if (listening) { stopListening(); return; }
+  if (listening)  { stopListening(); return; }
   if (!srSupported) {
-    const msg = 'Mamá Henny, este teléfono no puede escuchar la voz. Usa los botones de colores que están más abajo para hablar conmigo. 💕';
-    showAI(msg);
-    speak(msg);
-    return;
+    const msg = 'Mamá Henny, este teléfono no puede escuchar la voz. Usa los botones de colores que están más abajo. 💕';
+    showAI(msg); speak(msg); return;
   }
   startListening();
 }
- 
+
 function startListening() {
   stopSpeaking();
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -497,7 +612,7 @@ function startListening() {
   recognition.continuous = false;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
- 
+
   recognition.onstart = () => {
     listening = true;
     document.getElementById('voiceBtn').classList.remove('speaking');
@@ -507,32 +622,28 @@ function startListening() {
     document.getElementById('repeatBtn').classList.remove('visible');
     setStatus('Te escucho Mamá Henny... habla despacio y claro 🎙️');
   };
- 
+
   recognition.onresult = e => {
     const t = e.results[0][0].transcript;
     showUser(t);
     sendToAI(t);
   };
- 
+
   recognition.onerror = e => {
     const msgs = {
-      'network': 'Necesito internet para escucharte. ¿Hay WiFi activo? 💕',
-      'not-allowed': 'Necesito permiso para el micrófono. Ve a configuración del navegador 💕',
-      'no-speech': 'No escuché nada. Toca el botón verde y habla cerquita 💕',
+      'network':      'Necesito internet para escucharte. ¿Hay WiFi activo? 💕',
+      'not-allowed':  'Necesito permiso para el micrófono. Ve a ajustes del navegador 💕',
+      'no-speech':    'No escuché nada. Toca el botón verde y habla cerquita 💕',
     };
     setStatus(msgs[e.error] || 'No te escuché bien. Intenta de nuevo 💕');
     stopListening();
   };
- 
+
   recognition.onend = () => stopListening();
- 
   try { recognition.start(); }
-  catch(e) {
-    setStatus('No puedo activar el micrófono. Usa los botones 💕');
-    stopListening();
-  }
+  catch(e) { setStatus('No puedo activar el micrófono. Usa los botones 💕'); stopListening(); }
 }
- 
+
 function stopListening() {
   listening = false;
   if (recognition) { try { recognition.stop(); } catch(e) {} }
@@ -541,25 +652,21 @@ function stopListening() {
   document.getElementById('btnLabel').textContent = 'Toca para hablar';
   setStatus('Toca el botón verde para hablar conmigo 💕');
 }
- 
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
 // MODAL RECUERDOS — voz
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function toggleMemListen() { memListening ? stopMemListen() : startMemListen(); }
- 
+
 function startMemListen() {
-  if (!srSupported) {
-    closeMemories();
-    setStatus('Este teléfono no puede escuchar voz. Usa los botones 💕');
-    return;
-  }
+  if (!srSupported) { closeMemories(); setStatus('Este teléfono no puede escuchar voz. Usa los botones 💕'); return; }
   stopSpeaking();
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   memRecognition = new SR();
   memRecognition.lang = 'es-CO';
   memRecognition.continuous = false;
   memRecognition.interimResults = false;
- 
+
   memRecognition.onstart = () => {
     memListening = true;
     document.getElementById('memVoiceBtn').classList.add('listening');
@@ -568,18 +675,13 @@ function startMemListen() {
   };
   memRecognition.onresult = e => {
     const t = e.results[0][0].transcript;
-    closeMemories();
-    showUser(t);
-    sendToAI(t, false, true);
+    closeMemories(); showUser(t); sendToAI(t, false, true);
   };
-  memRecognition.onerror = () => {
-    setStatus('No te escuché. Toca un botón de la lista 💕');
-    stopMemListen();
-  };
+  memRecognition.onerror = () => { setStatus('No te escuché. Toca un botón de la lista 💕'); stopMemListen(); };
   memRecognition.onend = () => stopMemListen();
   try { memRecognition.start(); } catch(e) { stopMemListen(); }
 }
- 
+
 function stopMemListen() {
   memListening = false;
   if (memRecognition) { try { memRecognition.stop(); } catch(e) {} }
@@ -590,70 +692,66 @@ function stopMemListen() {
     document.getElementById('memBtnLabel').textContent = 'Hablar sobre mis recuerdos';
   }
 }
- 
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
 // BOTONES RÁPIDOS
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function askQuick(type) {
+  const now  = new Date();
+  const dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const fechaHora = `Hoy es ${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}, son las ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}.`;
+
   const prompts = {
-    fecha: '¿Qué día es hoy?',
-    hora: '¿Qué hora es ahora mismo?',
-    chiste: 'Cuéntame un chiste corto y divertido',
-    versiculo: 'Dime un versículo bíblico bonito para hoy y explícamelo brevemente con amor',
-    medicamentos: 'Necesito saber sobre mis medicamentos del pastillero',
-    oracion: 'Dime una oración corta y bonita para este momento'
+    fecha:         { text: '¿Qué día es hoy?',       prompt: `${fechaHora} Dile eso a Mamá Henny de forma cálida y cariñosa.` },
+    hora:          { text: '¿Qué hora es?',           prompt: `${fechaHora} Dile la hora a Mamá Henny de forma cálida.` },
+    chiste:        { text: 'Un chiste',               prompt: 'Cuéntale a Mamá Henny un chiste corto y divertido, apropiado para una señora mayor colombiana.' },
+    versiculo:     { text: 'Un versículo',            prompt: 'Dile a Mamá Henny un versículo bíblico bonito para hoy y explícaselo brevemente con amor. Que sea reconfortante.', isVersiculo: true },
+    oracion:       { text: 'Una oración',             prompt: 'Dile a Mamá Henny una oración corta y bonita para este momento, desde el corazón.' },
+    animo:         { text: '¡Anímate!',               prompt: 'Dile a Mamá Henny palabras de aliento y amor muy especiales. Hazla sentir querida, valiosa y acompañada. Menciona lo importante que es para su familia.' },
+    medicamentos:  { text: 'Mis medicamentos',        prompt: 'Dile a Mamá Henny con mucho amor que sus medicamentos están en el pastillero que Virgilio preparó con mucho cuidado. Que los tome con un buen vaso de agua. Si tiene duda que llame a Virgilio sin pena.' },
   };
-  showUser(prompts[type]);
-  sendToAI(prompts[type], type==='fecha'||type==='hora', false, type==='versiculo');
+
+  const cfg = prompts[type];
+  if (!cfg) return;
+  showUser(cfg.text);
+  sendToAI(cfg.prompt, false, false, !!cfg.isVersiculo);
 }
- 
+
 function askQuickFromMemory(type) { closeMemories(); askQuick(type); }
 function askMemory(prompt) { closeMemories(); showUser(prompt); sendToAI(prompt, false, true); }
- 
-// ═══════════════════════════════════════════════
-// IA — con manejo de errores amable
-// ═══════════════════════════════════════════════
-async function sendToAI(userText, isTime=false, isMemory=false, isVersiculo=false) {
+
+// ═══════════════════════════════════════════
+// LLAMADA A CLAUDE
+// ═══════════════════════════════════════════
+async function sendToAI(userText, _unused = false, isMemory = false, isVersiculo = false) {
   setStatus('Pensando... 💭');
   hideSharePanel();
   hideFollowUps();
-  stopSpeaking();
+  stopAllAudio();
   document.getElementById('aiBubble').classList.remove('visible');
   document.getElementById('repeatBtn').classList.remove('visible');
- 
-  let prompt = userText;
- 
-  if (isTime) {
-    const now = new Date();
-    const dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-    const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-    prompt = `Hoy es ${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}, son las ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}. Dile eso a Mamá Henny de forma cálida y cariñosa.`;
-  }
- 
-  if (/medicamento|pastilla|medicina/i.test(userText)) {
-    prompt = 'Dile a Mamá Henny con mucho amor que sus medicamentos están en el pastillero que Virgilio preparó con mucho cuidado. Que los tome con un buen vaso de agua. Si tiene alguna duda que llame a Virgilio sin pena.';
-  }
- 
+
   let system = MAMA_BIO + currentSpeaker;
- 
+
   if (isMemory) {
     system += `
- 
+
 MODO ESTIMULACIÓN COGNITIVA:
 Tu objetivo es INVITARLA A RECORDAR Y NARRAR con sus propias palabras. Nunca le cuentes la historia tú.
 Después de 2 oraciones cálidas, agrega exactamente:
 PREGUNTAS:
-1. [pregunta en segunda persona que la invite a narrar: "¿Cómo era...?", "¿Qué recuerdas de...?", "¿Cómo te sentiste cuando...?"]
-2. [pregunta específica con nombres reales: Lilia, Miguel, Cecilia, Max, Brasil, Colegio Lourdes, Barranquilla]
-3. [pregunta sobre emociones, olores, sabores o detalles sensoriales de ese recuerdo]`;
+1. [pregunta en segunda persona que la invite a narrar]
+2. [pregunta específica con nombres reales: Lilia, Miguel, Cecilia, Max, Brasil, Colegio Lourdes]
+3. [pregunta sobre emociones o detalles sensoriales del recuerdo]`;
   }
- 
+
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
+        'x-api-key': CLAUDE_KEY,
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
@@ -661,19 +759,18 @@ PREGUNTAS:
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 500,
         system,
-        messages: [{ role: 'user', content: prompt }]
+        messages: [{ role: 'user', content: userText }]
       })
     });
- 
-    if (!res.ok) throw new Error('HTTP ' + res.status);
- 
-    const data = await res.json();
+
+    if (!res.ok) throw new Error('HTTP:' + res.status);
+    const data  = await res.json();
     const reply = data?.content?.[0]?.text;
     if (!reply) throw new Error('vacío');
- 
+
     if (isMemory && reply.includes('PREGUNTAS:')) {
       const [main, rest] = reply.split('PREGUNTAS:');
-      const qs = (rest||'').split('\n')
+      const qs = (rest || '').split('\n')
         .map(q => q.replace(/^\d+\.\s*/, '').trim())
         .filter(q => q.length > 8 && q.length < 220);
       showAI(main.trim());
@@ -685,35 +782,34 @@ PREGUNTAS:
       });
     }
     setStatus('Toca el botón verde para hablar conmigo 💕');
- 
+
   } catch(e) {
-    // Error amable — nada de mensajes técnicos
-    const friendly = 'Mamá Henny, en este momento no pude conectarme. Espera un momento y vuelve a tocar el botón. 💕';
+    const friendly = 'Mamá Henny mi amor, en este momento no pude conectarme. Espera un momentico y vuelve a tocar el botón. 💕';
     showAI(friendly);
     speak(friendly);
     setStatus('¿Hay internet activo? Intenta de nuevo 💕');
   }
 }
- 
-// ═══════════════════════════════════════════════
-// COMPARTIR
-// ═══════════════════════════════════════════════
-function showSharePanel() { document.getElementById('sharePanel').classList.add('visible'); }
-function hideSharePanel() { document.getElementById('sharePanel').classList.remove('visible'); }
+
+// ═══════════════════════════════════════════
+// COMPARTIR VERSÍCULO
+// ═══════════════════════════════════════════
+function showSharePanel()  { document.getElementById('sharePanel').classList.add('visible'); }
+function hideSharePanel()  { document.getElementById('sharePanel').classList.remove('visible'); }
 function shareWA() {
   window.open('https://wa.me/?text=' + encodeURIComponent('🌸 Versículo del día:\n\n' + lastVersiculo + '\n\n— Con amor, Mamá Henny 💕'), '_blank');
 }
 function shareFB() {
   window.open('https://www.facebook.com/sharer/sharer.php?quote=' + encodeURIComponent('🌸 ' + lastVersiculo), '_blank');
 }
- 
-// ═══════════════════════════════════════════════
-// FOLLOW UPS
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// FOLLOW-UPS DE ESTIMULACIÓN COGNITIVA
+// ═══════════════════════════════════════════
 function showFollowUps(qs) {
   const p = document.getElementById('followUpPanel');
   p.innerHTML = '<div class="followup-title">💬 ¿Seguimos recordando?</div>';
-  qs.slice(0,3).forEach(q => {
+  qs.slice(0, 3).forEach(q => {
     if (!q) return;
     const b = document.createElement('button');
     b.className = 'followup-btn';
@@ -723,16 +819,16 @@ function showFollowUps(qs) {
   });
   p.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin:0 24px 16px;';
 }
- 
+
 function hideFollowUps() {
   const p = document.getElementById('followUpPanel');
   p.innerHTML = '';
   p.style.display = 'none';
 }
- 
-// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════
 // UI HELPERS
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function showUser(t) {
   document.getElementById('userBubble').textContent = t;
   document.getElementById('userBubble').classList.add('visible');
@@ -741,21 +837,16 @@ function showUser(t) {
   hideSharePanel();
   hideFollowUps();
 }
- 
+
 function showAI(t) {
   lastAIText = t;
   document.getElementById('aiBubble').textContent = t;
   document.getElementById('aiBubble').classList.add('visible');
 }
- 
+
 function setStatus(m) { document.getElementById('statusMsg').textContent = m; }
-function openMemories() { document.getElementById('memoriesModal').classList.add('open'); }
-function closeMemories() {
-  document.getElementById('memoriesModal').classList.remove('open');
-  stopMemListen();
-}
+function openMemories()  { document.getElementById('memoriesModal').classList.add('open'); }
+function closeMemories() { document.getElementById('memoriesModal').classList.remove('open'); stopMemListen(); }
 </script>
 </body>
 </html>
- 
-
