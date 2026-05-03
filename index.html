@@ -318,16 +318,17 @@ document.body.appendChild(audioEl);
 // ═══════════════════════════════════════════
 // ESTADO
 // ═══════════════════════════════════════════
-let currentSpeaker = 'Virgilio';
-let lastVersiculo  = '';
-let lastAIText     = '';
-let listening      = false;
-let memListening   = false;
-let isSpeaking     = false;
-let recognition    = null;
-let memRecognition = null;
-let selectedVoice  = null;
-let watchdogTimer  = null;
+let currentSpeaker    = 'Virgilio';
+let lastVersiculo     = '';
+let lastAIText        = '';
+let listening         = false;
+let memListening      = false;
+let isSpeaking        = false;
+let recognition       = null;
+let memRecognition    = null;
+let selectedVoice     = null;
+let watchdogTimer     = null;
+let memoryConversation = false;
 const ttsSupported = 'speechSynthesis' in window;
 const srSupported  = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 
@@ -673,7 +674,7 @@ function startListening() {
   recognition.onresult = e => {
     const t = e.results[0][0].transcript;
     showUser(t);
-    sendToAI(t);
+    sendToAI(t, false, memoryConversation);
   };
 
   recognition.onerror = e => {
@@ -761,6 +762,7 @@ function askQuick(type) {
 
   const cfg = prompts[type];
   if (!cfg) return;
+  memoryConversation = false;
   showUser(cfg.text);
   sendToAI(cfg.prompt, false, false, !!cfg.isVersiculo);
 }
@@ -768,10 +770,9 @@ function askQuick(type) {
 function askQuickFromMemory(type) { closeMemories(); askQuick(type); }
 function askMemory(prompt) {
   closeMemories();
-  // Convertir el tema en instrucción clara para Claude (no primera persona de MH)
-  const instruccion = 'TEMA DE HOY: ' + prompt + '\n\nHazle a Mamá Henny preguntas cálidas y abiertas sobre ese tema para que ELLA recuerde y narre. Tú eres el asistente, no ella.';
+  memoryConversation = true;
   showUser('🌹 Recordando...');
-  sendToAI(instruccion, false, true);
+  sendToAI('TEMA DE HOY: ' + prompt, false, true);
 }
 
 // ═══════════════════════════════════════════
@@ -788,21 +789,22 @@ async function sendToAI(userText, _unused = false, isMemory = false, isVersiculo
   let system = MAMA_BIO + currentSpeaker;
 
   if (isMemory) {
-    system += `
+    if (userText.startsWith('TEMA DE HOY:')) {
+      system += `
 
-MODO ESTIMULACIÓN COGNITIVA — REGLAS ABSOLUTAS:
+MODO ESTIMULACIÓN COGNITIVA — PRIMERA PREGUNTA:
+- Escribe UNA SOLA pregunta, corta y cálida, sobre el tema indicado.
+- Empieza DIRECTAMENTE con "¿". Cero introducción antes de la pregunta.
+- Segunda persona: "¿Recuerdas...?", "¿Cómo era...?", "¿Te acuerdas de...?"
+- Simple y clara para una señora mayor colombiana. Máximo 1 oración.`;
+    } else {
+      system += `
 
-1. TÚ ERES EL ASISTENTE. NUNCA eres Mamá Henny. NUNCA hables en primera persona como si fueras ella.
-2. Siempre hablas en SEGUNDA PERSONA, dirigiéndote A ella: "¿Tú recuerdas...?", "¿Cómo te sentiste...?", "Cuéntame tú..."
-3. NUNCA respondas la pregunta por ella. NUNCA narres su historia. NUNCA digas "Ay, esos recuerdos..." como si fueras ella.
-4. Tu único trabajo: 1 oración cálida de introducción + 2 preguntas abiertas cortas dirigidas A ella.
-5. Las preguntas deben ser simples, en español colombiano, fáciles de entender para una señora mayor.
-
-FORMATO DE RESPUESTA (exactamente así):
-[1 oración cálida dirigida A Mamá Henny]
-PREGUNTAS:
-1. [pregunta abierta corta, en segunda persona, dirigida A ella]
-2. [pregunta específica con un nombre real: Lilia, Miguel, Cecilia, Max, Brasil, Barranquilla]`;
+MODO ESTIMULACIÓN COGNITIVA — SEGUIMIENTO:
+- Ella acaba de responder algo. Reconócelo con 1 frase corta y natural.
+- Luego haz 1 pregunta de seguimiento relacionada con lo que ella dijo.
+- Máximo 2 oraciones en total. NO exageres. No empieces con "¡Ay qué bonito!".`;
+    }
   }
 
   try {
@@ -827,13 +829,11 @@ PREGUNTAS:
     const reply = data?.content?.[0]?.text;
     if (!reply) throw new Error('vacío');
 
-    if (isMemory && reply.includes('PREGUNTAS:')) {
-      const [main, rest] = reply.split('PREGUNTAS:');
-      const qs = (rest || '').split('\n')
-        .map(q => q.replace(/^\d+\.\s*/, '').trim())
-        .filter(q => q.length > 8 && q.length < 220);
-      showAI(main.trim());
-      speak(main.trim(), () => { if (qs.length) showFollowUps(qs); });
+    if (isMemory) {
+      showAI(reply.trim());
+      speak(reply.trim(), () => {
+        setTimeout(() => startListening(), 900);
+      });
     } else {
       showAI(reply);
       speak(reply, () => {
