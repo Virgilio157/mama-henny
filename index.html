@@ -419,6 +419,12 @@ window.onload = () => {
 // ═══════════════════════════════════════════
 // RECORDATORIO DE MEDICAMENTOS AUTOMÁTICO
 // ═══════════════════════════════════════════
+const MED_MSGS = {
+  manana:   'Mamá Henny, buenos días. Recuerda tomar los medicamentos de la mañana, los que Virgilio puso en el pastillero. Un vasito de agua y listo. 💊',
+  mediodia: 'Mamá Henny, es mediodía. ¿Ya tomaste los medicamentos del pastillero de hoy? Los del compartimento del medio. 💊',
+  tarde:    'Mamá Henny, son las medicinas de la tarde. Revisa el pastillero que preparó Virgilio. 💊'
+};
+
 function checkMedTime() {
   const h   = new Date().getHours();
   const hoy = new Date().toDateString();
@@ -432,15 +438,55 @@ function checkMedTime() {
   const key = 'med_' + hoy + '_' + slot;
   if (sessionStorage.getItem(key)) return;
 
-  const msgs = {
-    manana:   'Buenos días Mamá Henny mi amor. No olvides tomarte los medicamentos del pastillero que Virgilio preparó con tanto cuidado. Un vasito de agua y listo. 💊💕',
-    mediodia: 'Mamá Henny, ¿ya revisaste el pastillero de hoy? Es muy importante tomarse los medicamentos del mediodía. ¿Está vacío ese compartimento? 💊',
-    tarde:    'Mamá Henny mi amor, un recordatorio dulce: ¿ya tomaste todos tus medicamentos de hoy? Virgilio preparó ese pastillero pensando en ti. 💊💕'
-  };
-
   sessionStorage.setItem(key, '1');
-  showAI(msgs[slot]);
-  speak(msgs[slot]);
+  showAI(MED_MSGS[slot]);
+  speak(MED_MSGS[slot]);
+}
+
+// Muestra los recordatorios atrasados al abrir la app
+function checkMissedMeds() {
+  const h   = new Date().getHours();
+  const hoy = new Date().toDateString();
+  const pendientes = [];
+
+  if (h >= 8  && !sessionStorage.getItem('med_' + hoy + '_manana'))   pendientes.push('manana');
+  if (h >= 12 && !sessionStorage.getItem('med_' + hoy + '_mediodia')) pendientes.push('mediodia');
+  if (h >= 14 && !sessionStorage.getItem('med_' + hoy + '_tarde'))    pendientes.push('tarde');
+
+  pendientes.forEach((slot, i) => {
+    sessionStorage.setItem('med_' + hoy + '_' + slot, '1');
+    setTimeout(() => { showAI(MED_MSGS[slot]); speak(MED_MSGS[slot]); }, i * 8000);
+  });
+}
+
+// Notificaciones del navegador a las 8am y 12pm
+function setupNotifications() {
+  if (!('Notification' in window)) return;
+
+  function programar() {
+    if (Notification.permission !== 'granted') return;
+    [
+      { h: 8,  titulo: '💊 Pastillas de la mañana',   cuerpo: 'Mamá Henny, tómate las pastillas de la mañana.' },
+      { h: 12, titulo: '💊 Pastillas del mediodía',   cuerpo: 'Mamá Henny, es hora de las pastillas del mediodía.' }
+    ].forEach(({ h, titulo, cuerpo }) => {
+      const ahora   = new Date();
+      const objetivo = new Date(ahora);
+      objetivo.setHours(h, 0, 0, 0);
+      if (objetivo <= ahora) objetivo.setDate(objetivo.getDate() + 1);
+      const demora = objetivo - ahora;
+      setTimeout(() => {
+        new Notification(titulo, { body: cuerpo });
+        // Reprogramar para el día siguiente
+        setTimeout(() => programar(), 60000);
+      }, demora);
+    });
+  }
+
+  if (Notification.permission === 'granted') {
+    programar();
+  } else if (Notification.permission === 'default') {
+    Notification.requestPermission().then(p => { if (p === 'granted') programar(); });
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -632,11 +678,13 @@ function playGreeting() {
   setInterval(updateDateTime, 60000);
   setInterval(checkMedTime, 60000);
   checkMedTime();
+  setupNotifications();
   const h   = new Date().getHours();
   const pool = h >= 6 && h < 12 ? SALUDOS.manana : h < 19 ? SALUDOS.tarde : SALUDOS.noche;
   const g   = pool[Math.floor(Math.random() * pool.length)];
   showAI(g);
-  speak(g);
+  // Después de terminar el saludo, revisa recordatorios atrasados
+  speak(g, () => setTimeout(checkMissedMeds, 1500));
 }
 
 // ═══════════════════════════════════════════
