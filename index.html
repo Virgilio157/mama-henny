@@ -471,6 +471,18 @@ const SALUDOS = {
 };
 
 // ═══════════════════════════════════════════
+// WAKE LOCK — evita que se apague la pantalla
+// ═══════════════════════════════════════════
+let _wakeLock = null;
+async function keepScreenOn() {
+  if (!('wakeLock' in navigator)) return;
+  try { _wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') keepScreenOn();
+});
+
+// ═══════════════════════════════════════════
 // INICIO
 // ═══════════════════════════════════════════
 window.onload = () => {
@@ -481,6 +493,7 @@ window.onload = () => {
   }
   document.getElementById('setupScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  keepScreenOn();
   updateDateTime();
   setInterval(updateDateTime, 60000);
   setInterval(checkMedTime, 60000);
