@@ -50,6 +50,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   box-shadow: 0 8px 30px rgba(46,125,50,0.35);
   transition: all 0.2s; color: white; user-select: none;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
 #voiceBtn:active { transform: scale(0.95); }
 #voiceBtn.listening { background: linear-gradient(135deg, #ef5350, #c62828); animation: pulse-red 1.2s infinite; }
@@ -270,6 +271,29 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo es tu vida hoy en tu apartamento con Max tu perrito yorkshire. ¿Qué cosas hace Max que te hacen reír?')">Tu apartamento y Max</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame sobre tu amiga Cecilia y esas tardes tan lindas que pasas en su casa con Max. ¿Qué es lo que más disfrutas de estar con ella?')">Tu amiga Cecilia</button>
       <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de las amigas del colegio con las que te reúnes cada varios años. ¿Cómo son esos encuentros?')">Tus amigas del colegio</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de Elida, la señora que te prepara el desayuno cada mañana. ¿Qué te gusta desayunar? ¿Hay algo que te prepara que te gusta especialmente?')">Tu desayuno con Elida</button>
+    </div>
+
+    <div class="memory-category">
+      <h3>👶 Tus nietos</h3>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de tus nietos. ¿Cuántos tienes? ¿Cómo se llaman? Cada nieto es diferente — cuéntame de ellos.')">¿Cómo son tus nietos?</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, de todos tus nietos, ¿cuál te dio el susto más grande cuando eran pequeños? ¿O cuál era el más travieso?')">El más travieso de los nietos</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, ¿qué es lo más bonito de ser abuela? ¿Cómo se siente tener tantos nietos que te quieren tanto?')">Lo más bonito de ser abuela</button>
+    </div>
+
+    <div class="memory-category">
+      <h3>🌊 Tu tierra costeña</h3>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame cómo era el Carnaval de Barranquilla cuando eras joven. ¿Ibas? ¿Tienes recuerdos especiales de esa fiesta tan grande?')">El Carnaval de Barranquilla</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, ¿cuál era tu comida favorita de la Costa? ¿Qué plato te recuerda a tu mamá Lilia, a tu infancia, a Barranquilla?')">Tu comida favorita costeña</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de Cartagena donde naciste. ¿Tienes recuerdos de cuando eras niña allá? ¿El mar, el casco antiguo, las murallas?')">Tus recuerdos de Cartagena</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, ¿qué música te gusta? ¿Te gustaba el vallenato, la salsa, los boleros? ¿Había alguna canción que te gustara mucho cuando eras joven?')">La música que te gusta</button>
+    </div>
+
+    <div class="memory-category">
+      <h3>💑 Tu historia de amor</h3>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuando Miguel era Oficial Naval y salía en barco por meses, ¿cómo vivías tú esas ausencias? ¿Cómo te las arreglabas con los niños?')">Cuando Miguel salía en barco</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, cuéntame de la boda en 1965. ¿Dónde fue? ¿Cómo estabas vestida? ¿Quiénes estuvieron? ¿Qué recuerdas de ese día?')">Tu boda en 1965</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, ¿qué fue lo más difícil de criar cuatro hijos sola, después de que Miguel y tú se separaron? ¿Cómo lo lograste?')">Criar tus hijos con tanto amor</button>
     </div>
 
     <div class="memory-category">
@@ -277,6 +301,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
       <button class="memory-question" onclick="askQuickFromMemory('versiculo')">Un versículo especial para mí</button>
       <button class="memory-question" onclick="askQuickFromMemory('oracion')">Una oración bonita para hoy</button>
       <button class="memory-question" onclick="askQuickFromMemory('chiste')">Un chiste que me haga reír</button>
+      <button class="memory-question" onclick="askMemory('Mamá Henny, ¿desde cuándo eres cristiana creyente? ¿Hubo algún momento especial en tu vida en que tu fe se hizo más fuerte?')">Tu fe y tu relación con Dios</button>
     </div>
   </div>
 </div>
@@ -341,29 +366,93 @@ NUNCA hables en primera persona como si fueras ella. NUNCA digas "mis hijos", "m
 Siempre hablas EN SEGUNDA PERSONA dirigiéndote A ella: "tus hijos", "tu esposo", "¿tú recuerdas?".
 
 Eres el asistente personal y de acompañamiento de Mamá Henny (Henny Navarro de Salgado).
-Habla en español colombiano. Tono: cariñoso y cercano, pero MODERADO y natural. Evita los excesos.
-PROHIBIDO usar repetidamente: "mi amor", "mi amorcito", "tesoro", "hermosa", "preciosa". Úsalos máximo una vez por conversación.
+Habla en español colombiano costeño. Tono: cariñoso y cercano, MODERADO y natural. Sin excesos.
+PROHIBIDO usar repetidamente: "mi amor", "mi amorcito", "tesoro", "hermosa", "preciosa". Máximo una vez.
 El tono es el de alguien cercano y respetuoso que la quiere, no efusivo ni exagerado.
 
-DATOS DE MAMÁ HENNY:
-- Nombre: Henny Navarro de Salgado. Nació 7 agosto 1945 en Cartagena. Vive en Barranquilla.
-- Papás: Lilia Portillo (mamá) y Virgilio Navarro (papá, de El Carmen de Ocaña). Papá murió en accidente de tren en 1966. La abuela Lilia fue pilar de la familia.
-- Hermano: Virgilio Navarro, vive en EE.UU.
-- Estudió en Colegio Lourdes (monjas La Presentación), Barranquilla.
-- Esposo: Miguel Salgado Haddad, Oficial Naval. Casados en 1965. En 1971-72 toda la familia vivió en Brasil. En 1973 nació Guillermo. Luego se separaron.
-- 4 hijos: Miguel (EE.UU.), Carlos Alberto, Guillermo Eduardo, Virgilio (cirujano plástico, Barranquilla).
-- Mascota: Max, su perrito yorkshire, lo quiere muchísimo.
-- Amiga Cecilia: va en las tardes a su casa con Max.
-- Desayuno: Elida (señora del edificio) le prepara desayuno cada mañana.
-- Porteros: Ramiro y Dago (semana), Humberto (domingos).
-- Vive sola en edificio Elisa, Barranquilla. Es cristiana. Tiene deterioro cognitivo — olvida cosas recientes.
+BIOGRAFÍA COMPLETA:
+- Nombre: Henny Navarro de Salgado. Nació 7 agosto 1945 en Cartagena de Indias. Vive en Barranquilla.
+- Papás: Lilia Portillo de Navarro (mamá, pilar inquebrantable) y Virgilio Navarro (papá, originario de El Carmen de Ocaña, Norte de Santander). El papá murió en accidente de tren en 1966, cuando Mamá Henny tenía 20 años. Fue un golpe muy duro. La abuela Lilia sacó la familia adelante con una fortaleza admirable.
+- Hermano: Virgilio Navarro, emigró hace muchos años a Estados Unidos. Se llama igual que el hijo menor.
+- Estudió bachillerato en el Colegio Lourdes (monjas de La Presentación), Barranquilla. Guarda recuerdos muy bonitos de esa época — amigas, las monjas, los eventos del colegio.
+- Esposo: Miguel Salgado Haddad, Oficial de la Armada Nacional de Colombia. Se conocieron en Barranquilla y se casaron en 1965. Vivieron entre Barranquilla y Cartagena por el trabajo naval. De 1971 a 1972 toda la familia — incluyendo la abuela Lilia — vivió en Brasil. Fue una aventura grande. En 1973 nació Guillermo ya de regreso. Luego se separaron.
+- 4 hijos (de mayor a menor): 1) Miguel: el mayor, vive en Estados Unidos. 2) Carlos Alberto: vive en Colombia. 3) Virgilio: el menor de los varones, cirujano plástico reconocido en Barranquilla, es quien más la atiende y cuida. Le prepara el pastillero de medicamentos. 4) Guillermo Eduardo: vive en Barranquilla.
+- Nietos: varios nietos que la adoran. Son su orgullo y alegría.
+- Mascota: Max, su perrito yorkshire terrier. Es su compañero inseparable. Lo mima muchísimo — es como un hijo para ella. Max la alegra y la acompaña en los momentos de soledad.
+- Amiga del corazón: Cecilia. Mamá Henny va en las tardes a su casa con Max. Es una amistad muy especial y genuina.
+- También tiene amigas del colegio Lourdes con quienes se reúne cada varios años — esos encuentros la llenan de alegría y nostalgia.
+- Elida: señora del edificio Elisa que le prepara el desayuno cada mañana. Es una ayuda muy valiosa para la rutina diaria.
+- Porteros del edificio Elisa: Ramiro y Dago (entre semana), Humberto (domingos). Los conoce y confía en ellos.
+
+VIDA COTIDIANA Y CARÁCTER:
+- Empieza el día con el desayuno que Elida le prepara. Los medicamentos van en el pastillero que Virgilio organiza.
+- Disfruta la compañía de Max, las tardes en casa de Cecilia, las llamadas de sus hijos.
+- Le encanta reírse — un buen chiste la alegra mucho. Tiene sentido del humor.
+- Es cristiana creyente y practicante. Los versículos bíblicos y las oraciones le llegan profundamente al corazón.
+- Es mujer de carácter fuerte que sacó adelante su familia con dignidad. Muy orgullosa de sus hijos.
+- Es costeña de alma: Barranquilla y Cartagena son su mundo. Le gustan los recuerdos del mar, del Caribe, de su tierra.
+- Disfruta hablar del pasado — los recuerdos de su juventud, su colegio, sus papás, sus viajes. Esos recuerdos están muy vivos en ella.
+
+SALUD Y COMUNICACIÓN:
+- Tiene deterioro cognitivo leve-moderado: recuerda el pasado lejano con mucha claridad, pero puede olvidar cosas recientes (de hoy o de ayer).
+- NUNCA la corrijas ni le digas que algo que dijo está mal. Acepta su versión con amor y redirige suavemente.
+- Habla con oraciones cortas, claras y simples. Una idea a la vez.
+- Si se confunde o repite, acompáñala con paciencia y amor.
+- A veces puede sentirse sola o triste — en esos momentos necesita más calor y acompañamiento.
 
 REGLAS ABSOLUTAS:
-- Llámala siempre "Mamá Henny" o "mi amor"
-- Respuestas CORTAS: máximo 3-4 oraciones simples y claras
-- Nunca la contradigas — acompáñala siempre con amor
-- Si algo falla, responde con cariño y redirige suavemente
+- Llámala "Mamá Henny" (o "mi amor" máximo una vez por conversación).
+- Respuestas MUY CORTAS: máximo 3-4 oraciones simples y claras.
+- Nunca la contradigas ni la corrijas.
+- Si algo falla o ella se confunde, responde con cariño y redirige suavemente.
 - Hoy le habla: `;
+
+// ═══════════════════════════════════════════
+// SALUDOS PREGRABADOS — VOZ DE CADA HIJO
+// Nota: reemplaza estos voiceId por voces reales de ElevenLabs si consigues clonación de voz
+// ═══════════════════════════════════════════
+const SONS_CONFIG = {
+  'Virgilio': {
+    voiceId: 'TX3LPaxmHKxFdv7VOZE1',
+    greeting: 'Mamá, soy Virgilio. Te quiero muchísimo. Estoy aquí contigo siempre, pendiente de ti.'
+  },
+  'Miguel': {
+    voiceId: 'pNInz6obpgDQGcFmaJgB',
+    greeting: 'Mamá, soy Miguel. Estoy pensando en ti con todo mi corazón. Te quiero mucho, mamá.'
+  },
+  'Carlos Alberto': {
+    voiceId: 'VR6AewLTigWG4xSOukaG',
+    greeting: 'Mamá, soy Carlos Alberto. Que Dios te bendiga este día. Estás siempre en mis oraciones.'
+  },
+  'Guillermo': {
+    voiceId: 'ErXwobaYiN019PkySvjV',
+    greeting: 'Mamá, soy Guillermo. Te mando un abrazo enorme. Te quiero mucho mamá, cuídate.'
+  }
+};
+
+async function playSonGreeting(sonName) {
+  const cfg = SONS_CONFIG[sonName];
+  if (!cfg || !ELEVENLABS_KEY) return;
+  stopAllAudio();
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${cfg.voiceId}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': ELEVENLABS_KEY, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+      body: JSON.stringify({
+        text: cfg.greeting,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.60, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true }
+      })
+    });
+    if (!res.ok) return;
+    const blob = await res.blob();
+    if (!blob || blob.size < 100) return;
+    const url = URL.createObjectURL(blob);
+    audioEl.src = url;
+    audioEl.onended = () => URL.revokeObjectURL(url);
+    audioEl.play().catch(() => {});
+  } catch(e) { /* falla silenciosa */ }
+}
 
 const SALUDOS = {
   manana: [
@@ -396,6 +485,18 @@ window.onload = () => {
   setInterval(updateDateTime, 60000);
   setInterval(checkMedTime, 60000);
   checkMedTime();
+
+  // Touch handling confiable para el botón verde
+  const voiceBtn = document.getElementById('voiceBtn');
+  let _lastTap = 0;
+  voiceBtn.addEventListener('touchstart', e => { e.preventDefault(); }, { passive: false });
+  voiceBtn.addEventListener('touchend', e => {
+    e.preventDefault();
+    const now = Date.now();
+    if (now - _lastTap < 300) return;
+    _lastTap = now;
+    handleVoiceTap();
+  }, { passive: false });
 
   if (!srSupported) {
     document.getElementById('btnLabel').textContent = 'Solo botones';
@@ -671,6 +772,7 @@ function setSpeaker(name, btn) {
   currentSpeaker = name;
   document.querySelectorAll('.who-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  playSonGreeting(name);
 }
 
 function playGreeting() {
@@ -700,12 +802,18 @@ function handleVoiceTap() {
   startListening();
 }
 
+let _silenceTimer = null;
+let _accTranscript = '';
+
 function startListening() {
   stopSpeaking();
+  _accTranscript = '';
+  clearTimeout(_silenceTimer);
+
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
   recognition.lang = 'es-CO';
-  recognition.continuous = false;
+  recognition.continuous = true;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
@@ -720,12 +828,19 @@ function startListening() {
   };
 
   recognition.onresult = e => {
-    const t = e.results[0][0].transcript;
-    showUser(t);
-    sendToAI(t, false, memoryConversation);
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        _accTranscript += (_accTranscript ? ' ' : '') + e.results[i][0].transcript;
+        showUser(_accTranscript);
+      }
+    }
+    clearTimeout(_silenceTimer);
+    // Espera 3 segundos de silencio antes de enviar — le da tiempo de seguir hablando
+    _silenceTimer = setTimeout(() => { if (recognition) recognition.stop(); }, 3000);
   };
 
   recognition.onerror = e => {
+    clearTimeout(_silenceTimer);
     const msgs = {
       'network':      'Necesito internet para escucharte. ¿Hay WiFi activo? 💕',
       'not-allowed':  'Necesito permiso para el micrófono. Ve a ajustes del navegador 💕',
@@ -735,7 +850,13 @@ function startListening() {
     stopListening();
   };
 
-  recognition.onend = () => stopListening();
+  recognition.onend = () => {
+    clearTimeout(_silenceTimer);
+    if (_accTranscript) sendToAI(_accTranscript, false, memoryConversation);
+    _accTranscript = '';
+    stopListening();
+  };
+
   try { recognition.start(); }
   catch(e) { setStatus('No puedo activar el micrófono. Usa los botones 💕'); stopListening(); }
 }
@@ -790,6 +911,21 @@ function stopMemListen() {
 }
 
 // ═══════════════════════════════════════════
+// ROTACIÓN DE VERSÍCULOS Y ORACIONES (sin repetir)
+// ═══════════════════════════════════════════
+function getUsed(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
+function saveUsed(key, text) {
+  const arr = getUsed(key);
+  arr.push(text.substring(0, 90));
+  if (arr.length > 8) arr.shift();
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function avoidPrompt(key) {
+  const arr = getUsed(key);
+  return arr.length ? `\nIMPORTANTE: NO repitas estos que ya usaste recientemente: "${arr.join('" | "')}"` : '';
+}
+
+// ═══════════════════════════════════════════
 // BOTONES RÁPIDOS
 // ═══════════════════════════════════════════
 function askQuick(type) {
@@ -802,8 +938,8 @@ function askQuick(type) {
     fecha:         { text: '¿Qué día es hoy?',       prompt: `${fechaHora} Dile eso a Mamá Henny de forma cálida y cariñosa.` },
     hora:          { text: '¿Qué hora es?',           prompt: `${fechaHora} Dile la hora a Mamá Henny de forma cálida.` },
     chiste:        { text: 'Un chiste',               prompt: 'Cuéntale a Mamá Henny un chiste corto y divertido, apropiado para una señora mayor colombiana.' },
-    versiculo:     { text: 'Un versículo',            prompt: 'Dile a Mamá Henny un versículo bíblico bonito para hoy y explícaselo brevemente con amor. Que sea reconfortante.', isVersiculo: true },
-    oracion:       { text: 'Una oración',             prompt: 'Dile a Mamá Henny una oración corta y bonita para este momento, desde el corazón.' },
+    versiculo:     { text: 'Un versículo',            prompt: 'Dile a Mamá Henny un versículo bíblico bonito para hoy y explícaselo brevemente con amor. Que sea reconfortante.' + avoidPrompt('mh_versiculos'), isVersiculo: true },
+    oracion:       { text: 'Una oración',             prompt: 'Dile a Mamá Henny una oración corta y bonita para este momento, desde el corazón. Que sea diferente cada vez.' + avoidPrompt('mh_oraciones'), isOracion: true },
     animo:         { text: '¡Anímate!',               prompt: 'Dile a Mamá Henny palabras de aliento y amor muy especiales. Hazla sentir querida, valiosa y acompañada. Menciona lo importante que es para su familia.' },
     medicamentos:  { text: 'Mis medicamentos',        prompt: 'Dile a Mamá Henny con mucho amor que sus medicamentos están en el pastillero que Virgilio preparó con mucho cuidado. Que los tome con un buen vaso de agua. Si tiene duda que llame a Virgilio sin pena.' },
   };
@@ -812,7 +948,7 @@ function askQuick(type) {
   if (!cfg) return;
   memoryConversation = false;
   showUser(cfg.text);
-  sendToAI(cfg.prompt, false, false, !!cfg.isVersiculo);
+  sendToAI(cfg.prompt, false, false, !!cfg.isVersiculo, !!cfg.isOracion);
 }
 
 function askQuickFromMemory(type) { closeMemories(); askQuick(type); }
@@ -826,7 +962,7 @@ function askMemory(prompt) {
 // ═══════════════════════════════════════════
 // LLAMADA A CLAUDE
 // ═══════════════════════════════════════════
-async function sendToAI(userText, _unused = false, isMemory = false, isVersiculo = false) {
+async function sendToAI(userText, _unused = false, isMemory = false, isVersiculo = false, isOracion = false) {
   setStatus('Pensando... 💭');
   hideSharePanel();
   hideFollowUps();
@@ -885,7 +1021,8 @@ MODO ESTIMULACIÓN COGNITIVA — SEGUIMIENTO:
     } else {
       showAI(reply);
       speak(reply, () => {
-        if (isVersiculo) { lastVersiculo = reply; showSharePanel(); }
+        if (isVersiculo) { lastVersiculo = reply; saveUsed('mh_versiculos', reply); showSharePanel(); }
+        if (isOracion)   { saveUsed('mh_oraciones', reply); }
       });
     }
     setStatus('Toca el botón verde para hablar conmigo 💕');
