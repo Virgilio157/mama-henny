@@ -142,7 +142,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); min-height: 100
     💊 ¿Ya tomaste tus medicamentos hoy? — Toca aquí 💊
   </div>
 
-  <div class="header">
+  <div class="header" id="headerArea">
     <h1>Hola, Mamá Henny 🌸</h1>
     <div class="subtitle">Tu asistente de acompañamiento</div>
     <div class="datetime" id="datetime">cargando...</div>
@@ -498,6 +498,18 @@ window.onload = () => {
   setInterval(updateDateTime, 60000);
   setInterval(checkMedTime, 60000);
   checkMedTime();
+
+  // Triple toque en el header para resetear API key (acceso de administrador)
+  let _headerTaps = 0, _headerTimer = null;
+  document.getElementById('headerArea').addEventListener('click', () => {
+    _headerTaps++;
+    clearTimeout(_headerTimer);
+    _headerTimer = setTimeout(() => { _headerTaps = 0; }, 800);
+    if (_headerTaps >= 3) {
+      _headerTaps = 0;
+      if (confirm('¿Cambiar el API key?')) resetKey();
+    }
+  });
 
   // Touch handling confiable para el botón verde
   const voiceBtn = document.getElementById('voiceBtn');
@@ -1021,6 +1033,14 @@ MODO ESTIMULACIÓN COGNITIVA — SEGUIMIENTO:
       })
     });
 
+    if (res.status === 401 || res.status === 403) {
+      localStorage.removeItem('mh_claude_key');
+      CLAUDE_KEY = '';
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('setupScreen').style.display = 'flex';
+      document.getElementById('keyInput').placeholder = 'El key anterior no funcionó. Pega el nuevo aquí...';
+      return;
+    }
     if (!res.ok) throw new Error('HTTP:' + res.status);
     const data  = await res.json();
     const reply = data?.content?.[0]?.text;
